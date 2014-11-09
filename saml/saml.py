@@ -1,58 +1,28 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Sep 13 12:48:56 2014
+Created on Sat Nov 08 14:50:03 2014
 
 @author: stkyle
-
-Encryption
-Key - Exchange Method
-Cypher - Encrypting
-Hash - Message Authentication
-
-Master Secret Code
-
 """
-import ssl
-import uuid
-from lxml import etree
-from Crypto.Util.asn1 import DerSequence
-from Crypto.PublicKey import RSA
-from binascii import a2b_base64
-###ssl.PEM_cert_to_DER_cert('PEM_cert_string')
-# Extract subjectPublicKeyInfo field from X.509 certificate (see RFC3280)
-#cert = DerSequence()
-#cert.decode(der)
-#tbsCertificate = DerSequence()
-#tbsCertificate.decode(cert[0])
-#subjectPublicKeyInfo = tbsCertificate[6]
 
-# Initialize RSA key
-#rsa_key = RSA.importKey(subjectPublicKeyInfo)
-#OpenSSL.crypto.X509
-#https://www.v13.gr/blog/?p=303
 
-print("\n\n")
+NS_SAML = "urn:oasis:names:tc:SAML:2.0:assertion"
+NS_SAMLP = "urn:oasis:names:tc:SAML:2.0:protocol"
+NS_MD = "urn:oasis:names:tc:SAML:2.0:metadata"
+NS_DS = "urn:oasis:names:tc:SAML:metadata:ext:query"
+ns_ds = "http://www.w3.org/2000/09/xmldsig#"
+ns_xenc = "http://www.w3.org/2001/04/xmlenc#"
+ns_xs = "http://www.w3.org/2001/XMLSchema"
+ns_xsi = "http://www.w3.org/2001/XMLSchema-instance"
+
 nameid_format_entity = "urn:oasis:names:tc:SAML:2.0:nameid-format:entity"
 nameid_format_unspecified = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
-
 hash_alg_xml_exc = "http://www.w3.org/2001/10/xml-exc-c14n#"
 hash_alg_rsa_sha1 = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
-ns_saml = "urn:oasis:names:tc:SAML:2.0:assertion"
-ns_samlp = "urn:oasis:names:tc:SAML:2.0:protocol"
-ns_saml2 = "ojj"
-ns_samlp2 = "opp"
-ns_metadata = "urn:oasis:names:tc:SAML:2.0:metadata"
-ns_sig = "http://www.w3.org/2000/09/xmldsig#"
-xsi = 'http://www.host.org/2001/XMLSchema-instance'
 
 
-nsmap = {
-    'saml': ns_saml,
-    'samlp': ns_samlp,
-    'md': ns_metadata,
-    'ds': ns_sig,
-    'xsi': xsi,
-    }
+from lxml import etree
+from lxml.etree import ElementTree
 
 SAMLObject = etree.Element("SAMLObject", nsmap=nsmap)
 
@@ -134,104 +104,6 @@ if 1:
                 AttributeValue = etree.SubElement(Attribute, "{%s}AttributeValue" % ns_saml)
                 AttributeValue.set("{%s}type" % xsi, "xs:anyType")            
                 AttributeValue.text = "CCCCCCCCCCC"    
-                
-#<samlp:Response ID="_f97faa927f54ab2c1fef230eee27cba21245264205456" 
-#      IssueInstant="2009-06-17T18:43:25.456Z" Version="2.0">
-#   <saml:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">
-#      https://www.salesforce.com</saml:Issuer>
-#
-#   <samlp:Status>
-#      <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
-#   </samlp:Status>
-#
-#   <saml:Assertion ID="_f690da2480a8df7fcc1cbee5dc67dbbb1245264205456"
-#      IssueInstant="2009-06-17T18:45:10.738Z" Version="2.0">
-#      <saml:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">
-#         https://www.salesforce.com
-#      </saml:Issuer>
-#
-#      <saml:Signature>
-#         <saml:SignedInfo>
-#            <saml:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-#            <saml:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-#            <saml:Reference URI="#_f690da2480a8df7fcc1cbee5dc67dbbb1245264205456">
-#               <saml:Transforms>
-#                  <saml:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-#                  <saml:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
-#                     <ec:InclusiveNamespaces PrefixList="ds saml xs"/>
-#                  </saml:Transform>
-#               </saml:Transforms>
-#               <saml:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-#               <saml:DigestValue>vzR9Hfp8d16576tEDeq/zhpmLoo=
-#               </saml:DigestValue>
-#            </saml:Reference>
-#         </saml:SignedInfo>
-#         <saml:SignatureValue>
-#         
-         
+
+
 print etree.tostring(SAMLResponse, pretty_print=True)
-
-
-
-
-
-
-from OpenSSL import crypto, SSL
-from socket import gethostname
-from pprint import pprint
-from time import gmtime, mktime
- 
-CERT_FILE = "selfsigned.crt"
-KEY_FILE = "private.key"
- 
-def create_self_signed_cert():
-             
-        # create a key pair
-        k = crypto.PKey()
-        k.generate_key(crypto.TYPE_RSA, 1024)
- 
-        # create a self-signed cert
-        cert = crypto.X509()
-        cert.get_subject().C = "US"
-        cert.get_subject().ST = "DC"
-        cert.get_subject().L = "Washington"
-        cert.get_subject().O = "Dummy Company Ltd"
-        cert.get_subject().OU = "Dummy Company Ltd"
-        cert.get_subject().CN = gethostname()
-        cert.set_serial_number(1000)
-        cert.gmtime_adj_notBefore(0)
-        cert.gmtime_adj_notAfter(10*365*24*60*60)
-        cert.set_issuer(cert.get_subject())
-        cert.set_pubkey(k)
-        cert.sign(k, 'sha1')
- 
-        open(CERT_FILE, "wt").write(
-            crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
-        open(KEY_FILE, "wt").write(
-            crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
- 
-create_self_signed_cert()
-
-
-
-with open(CERT_FILE) as f:
-    cert_buffer = f.read()
-
-
-print cert_buffer
-
-myX509cert=crypto.load_certificate(crypto.FILETYPE_PEM,cert_buffer)
-public_key = myX509cert.get_pubkey()
-pubk_str = crypto.dump_privatekey(crypto.FILETYPE_TEXT,public_key)
-
-
-
-mySubjectCert=myX509cert.get_subject()
-#print mySubjectCert.get_components()
-print dict(mySubjectCert.get_components())
-#from Crypto.PublicKey import RSA
-from Crypto.Util.asn1 import DerSequence
-
-
-
-
