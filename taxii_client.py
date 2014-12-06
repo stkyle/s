@@ -61,7 +61,7 @@ print('HTTP Response Status: ' + str(http_resp.status_code))
 print('HTTP Response Header:')
 for k, v in sorted(http_resp.headers.iteritems()):
     sep = (28 - len(k)) * ' '
-    print('    %s: %s %s' % (k,sep,v))
+    print('    %s: %s %s' % (k, sep, v))
 
 ###############################################################################
 # Display TAXII Response ######################################################
@@ -69,6 +69,6 @@ for k, v in sorted(http_resp.headers.iteritems()):
 print('HTTP Response Body (TAXII Message): ')
 taxii_response = tm11.get_message_from_xml(http_resp.text)
 # print etree.tostring(taxii_response.to_etree(), pretty_print=True)
-print taxii_response.to_text()
+print(taxii_response.to_text())
 
 
